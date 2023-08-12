@@ -2,9 +2,9 @@
 import { Schema } from "mongoose";
 
 // types
-import type { User } from "../../interfaces/User";
+import type { UserType } from "../../interfaces/User";
 
-export const UserSchema = new Schema<User>({
+export const UserSchema = new Schema<UserType>({
     username: {
         type: String,
         required: true,
@@ -18,5 +18,11 @@ export const UserSchema = new Schema<User>({
     password: {
         type: String,
         required: true
+    },
+    role: {
+        type: String,
+        enum: ['Admin', 'User'],
+        default: 'User',
+        required: true
     }
-});
+}, { timestamps: true });

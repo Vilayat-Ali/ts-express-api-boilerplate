@@ -1,27 +1,29 @@
 // lib
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 
 // helpers
 import { AuthHelper } from "./helpers";
 import { UserHelper } from "../user/helpers";
 
 // types
-import { User } from "../../interfaces/User";
+import { UserType } from "../../interfaces/User";
 
 export class AuthRoutes {
 
     public static async register(req: Request, res: Response) {
         try {
-            const {username, email, password} = req.body;
+            const {username, email, password, role: userDefinedRole} = req.body;
             const hashedPassword: string = AuthHelper.hashPassword(password);
+            const role: 'User' | 'Admin' = typeof userDefinedRole === "undefined" ? 'User' : 'Admin';
 
-            const payload: User = {
+            const payload: UserType = {
                 username, 
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                role
             };
 
-            const token: string = AuthHelper.generateToken({username, email});
+            const token: string = AuthHelper.generateToken({username, email, role});
             await UserHelper.addUser(payload);
             return res.json({success: true, access_token: token});
         } catch(err: any) {
@@ -45,7 +47,7 @@ export class AuthRoutes {
                 return res.json({success: false, message: 'Invalid password!'});
             }
 
-            const token: string = AuthHelper.generateToken({username: user.username, email: user.email});
+            const token: string = AuthHelper.generateToken({username: user.username, email: user.email, role: user.role});
             return res.json({success: true, access_token: token});
         } catch(err: any) {
             console.log(err);

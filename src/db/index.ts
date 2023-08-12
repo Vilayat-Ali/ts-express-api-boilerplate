@@ -5,19 +5,15 @@ import { exit } from "process";
 
 // models
 import { UserSchema } from "./models/user.model";
-import { TodoSchema } from "./models/todo.model";
 
 // types
-import { User } from "../interfaces/User";
-import { Todo } from "../interfaces/Todo";
+import { UserType } from "../interfaces/User";
 
 export class Mongo {
-    public userModel: mongoose.Model<User>;
-    public todoModel: mongoose.Model<Todo>;
+    public userModel: mongoose.Model<UserType>;
 
     constructor() {
         this.userModel = mongoose.model("user", UserSchema);
-        this.todoModel = mongoose.model("todo", TodoSchema);
     }
 
     public async connect() {

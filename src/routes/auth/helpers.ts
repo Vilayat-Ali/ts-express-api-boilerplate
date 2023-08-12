@@ -3,11 +3,11 @@ import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 // types
-import { User } from "../../interfaces/User";
+import { UserTokenPayload } from "../../interfaces/User";
 
 export class AuthHelper {
 
-    public static generateToken(payload: {username: string, email: string}): string {
+    public static generateToken(payload: UserTokenPayload): string {
         return jsonwebtoken.sign(payload, String(process.env.JWT_SECRET), { expiresIn: '6d'});
     }
 
