@@ -1,5 +1,5 @@
 {
-  "name": "Avi",
+  "name": "boilerplate",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -17,7 +17,6 @@
     "@types/express": "^4.17.17",
     "@types/helmet": "^4.0.0",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/mongoose": "^5.11.97",
     "@types/node": "^20.4.10",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
@@ -32,8 +31,10 @@
     "express": "^4.18.2",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.4.3",
+    "pg": "^8.11.2",
+    "reflect-metadata": "^0.1.13",
     "socket.io": "^4.7.2",
+    "typeorm": "^0.3.17",
     "zod": "^3.22.0"
   }
 }

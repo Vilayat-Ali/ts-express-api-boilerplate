@@ -10,6 +10,7 @@ import https from "https";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
 import { exit } from "process";
+import "reflect-metadata";
 
 // websockets
 import { ServeWebSocket } from "./ws";
@@ -27,9 +28,6 @@ if (!zodParseError.success) {
 export const ENV = zodParseError.data;
 consola.success("ENV loaded successfully");
 
-// db
-import { Mongo } from "./db";
-
 // routes
 import { Api } from "./routes/api";
 
@@ -40,8 +38,10 @@ app.use(cors());
 app.use(compression());
 app.use(helmet());
 
-// db connection establishment
-new Mongo().connect();
+// Database
+import { DB } from "./db";
+
+new DB();
 
 app.get("/", async (req, res) => {
   return res.json({ message: "Hello" });
@@ -68,6 +68,6 @@ const io = new Server(httpServer, {
 new ServeWebSocket(io);
 
 // running server to listen to PORT
-app.listen(Number(process.env.PORT), () => {
-  consola.info(`Server spinning on port. ${process.env.PORT}`);
+app.listen(ENV.PORT, () => {
+  consola.info(`Server spinning on port. ${ENV.PORT}`);
 });

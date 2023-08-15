@@ -1,42 +1,44 @@
 // lib
-import mongoose from "mongoose";
 import consola from "consola";
-import { exit } from "process";
+import { DataSource } from "typeorm";
 
-// models
-import { UserSchema } from "./models/user.model";
+// env
+import { ENV } from "../server";
 
-// types
-import { UserType } from "../interfaces/User";
+// entities
 
-export class Mongo {
-    public userModel: mongoose.Model<UserType>;
+export class DB {
+  private dataSource!: DataSource;
 
-    constructor() {
-        this.userModel = mongoose.model("user", UserSchema);
+  constructor() {
+    try {
+      this.dataSource = new DataSource({
+        type: "postgres",
+        host: ENV.DB_HOST,
+        port: ENV.DB_PORT,
+        username: ENV.DB_USERNAME,
+        password: ENV.DB_PASSWORD,
+        database: ENV.DB_DATABASE_NAME,
+        entities: [
+          // entities
+        ],
+        synchronize: true,
+        logging: false,
+      });
+      this.dataSource.initialize();
+      consola.success("Connected to DB");
+    } catch (err: any) {
+      consola.error(err?.message);
     }
+  }
 
-    public async connect() {
-        try {
-            if(!mongoose.connections[0].readyState) {
-                await mongoose.connect(String(process.env.MONGO_URI));
-                consola.success("Connected to DB");
-            }
-        } catch (err: any) {
-            consola.error("Cannot connect to DB");
-            exit(1);
-        }
-    }
+  // getter
+  public getDataSource(): DataSource {
+    return this.dataSource;
+  }
 
-    public async disconnect() {
-        try {
-            if(mongoose.connections[0].readyState) {
-                await mongoose.disconnect();
-                consola.info("Disconnected to DB");
-            }
-        } catch (err: any) {
-            consola.error("Cannot connect to DB");
-            exit(1);
-        }
-    }
+  // setter
+  public setDataSource(source: DataSource) {
+    this.dataSource = source;
+  }
 }

@@ -6,12 +6,16 @@ export const EnvSchema = z.object({
   PORT: z
     .string()
     .regex(/^\d{4}$/)
-    .nonempty(),
-  MONGO_URI: z
-    .string()
-    .regex(
-      /mongodb:\/\/(?:(?:[^:]+):(?:[^@]+)?@)?(?:(?:(?:[^\/]+)|(?:\/.+.sock?),?)+)(?:\/([^\/\.\ "*<>:\|\?]*))?(?:\?(?:(.+=.+)&?)+)*/
-    )
-    .nonempty(),
+    .nonempty()
+    .transform(Number),
   JWT_SECRET: z.string().min(64).max(256).nonempty(),
+  DB_HOST: z.string().nonempty(),
+  DB_PORT: z
+    .string()
+    .regex(/^\d{4}$/)
+    .nonempty()
+    .transform(Number),
+  DB_USERNAME: z.string().nonempty(),
+  DB_PASSWORD: z.string().nonempty(),
+  DB_DATABASE_NAME: z.string().nonempty(),
 });
