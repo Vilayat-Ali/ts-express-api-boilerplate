@@ -8,9 +8,24 @@ import consola from "consola";
 import http from "http";
 import https from "https";
 import { Server } from "socket.io";
+import dotenv from "dotenv";
+import { exit } from "process";
 
-// env
-import { Env } from "./env";
+// websockets
+import { ServeWebSocket } from "./ws";
+
+// zod types
+import { EnvSchema } from "./zod/env.zod";
+
+// envs
+dotenv.config();
+const zodParseError = EnvSchema.safeParse(process.env);
+if (!zodParseError.success) {
+  consola.fatal(zodParseError.error.format());
+  exit(1);
+}
+export const ENV = zodParseError.data;
+consola.success("ENV loaded successfully");
 
 // db
 import { Mongo } from "./db";
@@ -36,7 +51,7 @@ app.use("/api", new Api().getRouter());
 
 // web sockets
 let httpServer = null;
-if (Env.NODE_ENV === "development") {
+if (ENV.NODE_ENV === "development") {
   httpServer = http.createServer(app);
 } else {
   httpServer = https.createServer(app);
@@ -49,11 +64,10 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("We are live and connected");
-  console.log(socket.id);
-});
+// extending web socket functionality
+new ServeWebSocket(io);
 
+// running server to listen to PORT
 app.listen(Number(process.env.PORT), () => {
   consola.info(`Server spinning on port. ${process.env.PORT}`);
 });

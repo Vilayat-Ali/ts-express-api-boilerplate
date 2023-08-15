@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 // event handlers
+import handler from "./handlers";
 
 export class ServeWebSocket {
   private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
@@ -13,6 +14,9 @@ export class ServeWebSocket {
     this.io = io;
 
     // mapping event
+    handler.map((handler) => {
+      this.io.on(handler.eventName, handler.handler);
+    });
   }
 
   public getIO(): Server<

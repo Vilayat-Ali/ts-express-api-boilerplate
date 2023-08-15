@@ -1,11 +1,7 @@
 // lib
 import { z } from "zod";
-import dotenv from "dotenv";
 
-// introducing envs
-dotenv.config();
-
-const EnvSchema = z.object({
+export const EnvSchema = z.object({
   NODE_ENV: z.enum(["development", "production"]).default("development"),
   PORT: z
     .string()
@@ -19,5 +15,3 @@ const EnvSchema = z.object({
     .nonempty(),
   JWT_SECRET: z.string().min(64).max(256).nonempty(),
 });
-
-export const Env = EnvSchema.parse(process.env);
