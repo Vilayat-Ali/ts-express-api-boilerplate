@@ -6,6 +6,7 @@ A solid Express backend boilerplate project, ready to be converted into any proj
 - Typescript
 - Express
 - MongoDB (mongoose.js)
+- Bun.js
 
 ## Principles
 - Object Oriented Programming
